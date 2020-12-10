@@ -1,0 +1,34 @@
+python manage.py shell
+
+=> from myapp.models import *
+=> import pytz
+=> from datetime import datetime
+=> from django.conf import settings
+=> data = "Copy data from static/docs/MOCK_DATA.json and Paste Here"
+=> for d in data:
+    purchase_model = PurchaseModel(purchaser_name=d['purchaser_name'], quantity=d['quantity'])
+    purchase_model.save()
+=> data2 = "Copy date from static/docs/MOCK_DATA (1).json and Paste Here"
+=> for d in data2:
+    purchase_model = PurchaseModel.objects.get(id=d['purchase'])
+    converted_date = datetime.strptime(d['created_at'], "%Y-%m-%d").replace(tzinfo=pytz.timezone(settings.TIME_ZONE))
+    purchase_status_model = PurchaseStatusModel(purchase=purchase_model, status=d['status'])
+    purchase_status_model.save()
+    purchase_status_model.created_at=converted_date
+    purchase_status_model.save()
+
+********************** Update Quantity Date ************************************
+=> data = "Copy data from static/docs/MOCK_DATA.json and Paste Here"
+=> for d in data:
+    purchase_model = PurchaseModel.objects.get(id=d['id'])
+    purchase_model.quantity=d['quantity']
+    purchase_model.save()
+
+********************** Update Created_At Date ************************************
+=> data2 = "Copy date from static/docs/MOCK_DATA (1).json and Paste here"
+=> for d in data2:
+    purchase_model = PurchaseModel.objects.get(id=d['purchase'])
+    converted_date = datetime.strptime(d['created_at'], "%Y-%m-%d").replace(tzinfo=pytz.timezone(settings.TIME_ZONE))
+    purchase_status_model = PurchaseStatusModel.objects.get(purchase=purchase_model)
+    purchase_status_model.created_at=converted_date
+    purchase_status_model.save()
